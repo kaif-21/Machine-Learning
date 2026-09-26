@@ -1,0 +1,77 @@
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.metrics import(
+    confusion_matrix,
+    accuracy_score,
+    classification_report,
+    recall_score,
+    f1_score,
+    mean_squared_error,
+    r2_score,
+    mean_absolute_error
+)
+
+# Load the data sets--> step 1
+df = pd.read_csv("boston.csv")
+
+# now visualize the data
+print(df.head())
+print(df.tail())
+print(df.columns)
+print(df.shape)
+print(df.describe())
+print(df.info())
+print(df.isnull().sum())
+
+
+# Now Apply EDA
+
+# sns.histplot(df['rm'])
+# plt.show()
+# sns.histplot(df['age'])
+# plt.show()
+# sns.histplot(df['medv'])
+# plt.show()
+#
+# sns.boxplot(x=df['rm'],y=df['medv'])
+# plt.show()
+
+
+# define x and y
+
+x=df.drop(["medv"],axis=1)
+y=df["medv"]
+
+#apply train test split
+x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
+
+# Apply algorithm
+
+lm = LinearRegression()
+lm.fit(x_train,y_train)
+
+
+coeff_df = pd.DataFrame(lm.coef_,x.columns, columns=['Coefficient'])
+print("coeff:",coeff_df)
+
+y_pred = lm.predict(x_test)
+
+print("Prediction:", y_pred)
+
+print("MAE:", mean_absolute_error(y_test, y_pred))
+print("MSE:", mean_squared_error(y_test, y_pred))
+print("RMSE:", np.sqrt(mean_squared_error(y_test, y_pred)))
+print("R2 Score:", r2_score(y_test, y_pred))
+
+
+
+
+
+
+
